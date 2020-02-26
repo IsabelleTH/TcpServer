@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -12,46 +10,46 @@ namespace TcpClientSystem
     {
         static void Main(string[] args)
         {
-            try
+            //Create a client that connects to the specified IP Address and port
+            var client = new TcpClient("127.0.0.1", 8001);
+            var stream = client.GetStream();
+
+            Task.Run(() => ListenForMessages(stream));
+
+            while (true)
             {
-                //Create a client that connects to the specified IP Address and port
-                TcpClient client = new TcpClient("127.0.0.1", 8001);
+                var message = Console.ReadLine();
 
-                //Create a stream reader and a stream writer
-                StreamReader reader = new StreamReader(client.GetStream());
-                StreamWriter writer = new StreamWriter(client.GetStream());
+                // Skicka meddelandets storlek (i byte array)
+                var bytes = BitConverter.GetBytes(message.Length);
+                stream.Write(bytes, 0, bytes.Length);
 
-                //Set a string to empty in which the user input will be stored
-                string str = string.Empty;
-                Console.WriteLine("Start a converstaion...");
-
-                //Create a while loop that loops thorugh as long as str != exit
-                while (str != "Exit")
-                {
-                    
-                    //Assign the user input varible to Console.Readline()
-                    str = Console.ReadLine();
-                    Console.WriteLine();
-                    //Här skriver den ut strängen till strömmen som är mellan klienten och servern
-                    writer.WriteLine(str);
-                    //Återställ strömmen med hjälp av Flush()
-                    writer.Flush();
-
-                    //Här läser klienten av det som skickas från servern
-                    string server_string = reader.ReadLine();
-
-                    //Skriv ut det som hämtas från servern
-                    Console.WriteLine(server_string);
-
-                }
-                reader.Close();
-                writer.Close();
-                client.Close();
+                // Gör meddelandet till bytearray och skicka
+                var messageBytes = Encoding.UTF8.GetBytes(message);
+                stream.Write(messageBytes, 0, messageBytes.Length);
             }
-            catch (Exception e)
+        }
+
+        static void ListenForMessages(NetworkStream stream)
+        {
+            while (true)
             {
-                Console.WriteLine(e);
+                // Lyssna på hur stort inkommande paket är
+                var sizeBuffer = new byte[10];
+                stream.Read(sizeBuffer, 0, sizeBuffer.Length);
+
+                var packageSize = BitConverter.ToInt32(sizeBuffer, 0);
+
+                // Skapa en array med den storleken
+                var messageBuffer = new byte[packageSize];
+
+                // Läs den storleken
+                stream.Read(messageBuffer, 0, messageBuffer.Length);
+
+                // Convertera bytearray till string
+                var message = Encoding.UTF8.GetString(messageBuffer);
+                Console.WriteLine(message);
             }
-        } 
+        }
     }
 }
