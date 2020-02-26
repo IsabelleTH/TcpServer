@@ -1,0 +1,7 @@
+C:\Users\admin\source\repos\TcpClient\TcpClient\bin\Debug\TcpClient.exe.config
+C:\Users\admin\source\repos\TcpClient\TcpClient\bin\Debug\TcpClient.exe
+C:\Users\admin\source\repos\TcpClient\TcpClient\bin\Debug\TcpClient.pdb
+C:\Users\admin\source\repos\TcpClient\TcpClient\obj\Debug\TcpClient.csproj.CoreCompileInputs.cache
+C:\Users\admin\source\repos\TcpClient\TcpClient\obj\Debug\TcpClient.exe
+C:\Users\admin\source\repos\TcpClient\TcpClient\obj\Debug\TcpClient.pdb
+C:\Users\admin\source\repos\TcpClient\TcpClient\obj\Debug\TcpClient.csprojResolveAssemblyReference.cache
